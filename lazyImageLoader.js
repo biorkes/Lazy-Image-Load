@@ -86,15 +86,14 @@ class LazyImageLoad {
   lazyImageLoader(){
 
       for(let i = 0; i < self.imageSelector.length; i++){
-          if(self.imageSelector[i] !== undefined){
-              if(self.imageSelector[i].hasAttribute( self.attribute )){
-                  if(self.imageSelector[i].offsetTop < (window.innerHeight + window.pageYOffset + self.offset) ){
-                      self.imageSelector[i].src = self.imageSelector[i].getAttribute( self.attribute );
-                      self.imageSelector[i].classList.add( self.loadedClass );
-                      self.loadedCounter++;
-                      delete self.imageSelector[i];
-                  }
-              }
+          if(self.imageSelector[i] !== undefined && self.imageSelector[i].hasAttribute( self.attribute )){
+            if(self.imageSelector[i].offsetTop < (window.innerHeight + window.pageYOffset + self.offset) ){
+                self.imageSelector[i].src = self.imageSelector[i].getAttribute( self.attribute );
+                self.imageSelector[i].classList.add( self.loadedClass );
+                self.imageSelector[i].removeAttribute(self.attribute);
+                self.loadedCounter++;
+                delete self.imageSelector[i];
+            }
           }
       }
   }
