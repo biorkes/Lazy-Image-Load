@@ -92,7 +92,6 @@ class LazyImageLoad {
                 self.imageSelector[i].classList.add( self.loadedClass );
                 self.imageSelector[i].removeAttribute(self.attribute);
                 self.loadedCounter++;
-                delete self.imageSelector[i];
             }
           }
       }
