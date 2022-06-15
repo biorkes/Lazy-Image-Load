@@ -29,6 +29,6 @@ new LazyImageLoad( options );
 
 `options.loadedClass` - `(string)` - The class added to the loaded images. Default: `"lazy--loaded"`
 
-`options.showStats` - `(boolean)` - Toggle stats after scripts load all the images: Default: `true`
+`options.showStats` - `(boolean)` - Toggle stats after scripts load all the images: Default: `false`
 
 `options.attribute` - `(string)` - Data Attribute in the img element containing the resource to be lazyload: Default: `"dataset"`
