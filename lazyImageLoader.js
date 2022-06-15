@@ -12,71 +12,75 @@ class LazyImageLoad {
 
   constructor(options) {
       
-      self = this;
-      
+      /**
+       * Take options as a class object
+       * @type {Object}
+       */
+      this.options = options;
+          
       /**
        * Counts loaded images
        * @type {Number}
        */
-      self.loadedCounter = 0;
+      this.loadedCounter = 0;
 
       /**
        * Data attribute in the img element containg the image url to be loaded
        * @type {String}
        */
-      self.attribute = (options && options.attribute) || "dataset"
+      this.attribute = (options && options.attribute) || "dataset"
 
       /**
-       * Show stats of this instance after the script has finished loading the images from the self.imageSelector
+       * Show stats of this instance after the script has finished loading the images from the this.imageSelector
        * @type {Boolean}
        */
-      self.showStats = (options && options.showStats) || true;
+      this.showStats = (options && options.showStats) || false;
 
       /**
        * Class name to be added to the loaded images
        * @type {String}
        */
-      self.loadedClass = (options && options.loadedClass) || "lazy--loaded";
+      this.loadedClass = (options && options.loadedClass) || "lazy--loaded";
 
       /**
        * Nodelist with images
        * @type {Array of objects}
        */
-      self.imageSelector = (options && options.images) || document.querySelectorAll('img[' + self.attribute + ']');
+      this.imageSelector = (options && options.images) || document.querySelectorAll('img[' + this.attribute + ']');
       
       /**
        * Counts images to be lazyload
        * @type {Number}
        */
-      self.imageCounter = self.imageSelector.length;
+      this.imageCounter = this.imageSelector.length;
       
       /**
        * Additional buffer scroll value to trigger earlier image loading
        * @type {Number}
        */
-      self.offset = options && options.offset || window.innerHeight * 0.5;
+      this.offset = options && options.offset || window.innerHeight * 0.5;
 
       /**
        * Loads the image with Xms delay after the user stopped scrolling
        * @type {Number}
        */
-      self.loadDelay = options && options.loadDelay || 100;
+      this.loadDelay = options && options.loadDelay || 100;
 
       /**
        * Timeout containg the self.loadDelay value and the lazyload script
        * @type {Mixed}
        */
-      self.timeout = null;
+      this.timeout = null;
 
       /**
        * Init the script at first loading. This will load all images visible on the current screen.
        */
-      self.lazyImageLoader();
+      this.lazyImageLoader();
 
       /**
        * Load the script
        */
-      self.bindLoader();
+      this.bindLoader();
   }
 
   /**
@@ -85,13 +89,13 @@ class LazyImageLoad {
    */
   lazyImageLoader(){
 
-      for(let i = 0; i < self.imageSelector.length; i++){
-          if(self.imageSelector[i] !== undefined && self.imageSelector[i].hasAttribute( self.attribute )){
-            if(self.imageSelector[i].offsetTop < (window.innerHeight + window.pageYOffset + self.offset) ){
-                self.imageSelector[i].src = self.imageSelector[i].getAttribute( self.attribute );
-                self.imageSelector[i].classList.add( self.loadedClass );
-                self.imageSelector[i].removeAttribute(self.attribute);
-                self.loadedCounter++;
+      for(let i = 0; i < this.imageSelector.length; i++){
+          if(this.imageSelector[i] !== undefined && this.imageSelector[i].hasAttribute( this.attribute )){
+            if(this.imageSelector[i].offsetTop < (window.innerHeight + window.pageYOffset + this.offset) ){
+                this.imageSelector[i].src = this.imageSelector[i].getAttribute( this.attribute );
+                this.imageSelector[i].classList.add( this.loadedClass );
+                this.imageSelector[i].removeAttribute(this.attribute);
+                this.loadedCounter++;
             }
           }
       }
@@ -102,7 +106,7 @@ class LazyImageLoad {
    * @return {Boolean}
    */
   doneLoading(){
-      return self.imageCounter === self.loadedCounter;
+      return this.imageCounter === this.loadedCounter;
   }
 
   /**
@@ -110,9 +114,9 @@ class LazyImageLoad {
    * @return {Object} Returns stats with details of loaded elements
    */
   unbindLoader(){
-      window.removeEventListener('scroll', self._init);
-      if( self.showStats === true ){
-        self._stats();
+      window.removeEventListener('scroll', this._init.bind(this));
+      if( this.showStats === true ){
+        this._stats();
       }
   }
 
@@ -121,26 +125,24 @@ class LazyImageLoad {
    * @return {}
    */
   bindLoader(){
-      if(self.imageCounter > 0){
-          window.addEventListener('scroll', self._init, false);
+      if(this.imageCounter > 0){
+          window.addEventListener('scroll', this._init.bind(this), false);
       }
   }
 
   /**
-   * Check if image has to be lazyloaded, creates a timeout, runs the lazyload logic with a self.loadDelay delay
+   * Check if image has to be lazyloaded, creates a timeout, runs the lazyload logic with a this.loadDelay delay
    * @return {}
    */
   _init(){
-      if(self.doneLoading() === true){
-          clearTimeout(self.timeout);    
-          self.unbindLoader();
+      if(this.doneLoading() === true){
+          clearTimeout(this.timeout);    
+          this.unbindLoader();
       }else{
-          if(self.timeout !== null) {
-              clearTimeout(self.timeout);        
+          if(this.timeout !== null) {
+              clearTimeout(this.timeout);        
           }
-          self.timeout = setTimeout( function(){
-              self.lazyImageLoader();
-          }, self.loadDelay);
+          this.timeout = setTimeout( this.lazyImageLoader(), this.loadDelay);
       }
   }
 
@@ -150,11 +152,11 @@ class LazyImageLoad {
    */
   _stats(){
       console.log({
-          totalImages: self.imageCounter, 
-          totalImagesLoaded: self.loadedCounter, 
-          offset: self.offset, 
-          loadDelay: self.loadDelay, 
-          timeout_id: self.timeout, 
+          totalImages: this.imageCounter, 
+          totalImagesLoaded: this.loadedCounter, 
+          offset: this.offset, 
+          loadDelay: this.loadDelay, 
+          timeout_id: this.timeout, 
       });
   }
 }
